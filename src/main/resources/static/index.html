@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crypto Prices SSE</title>
+</head>
+<body>
+<h1>Preços em tempo real</h1>
+<pre id="output"></pre>
+
+<script>
+const output = document.getElementById('output');
+const evtSource = new EventSource("/api/crypto/prices");
+
+evtSource.onmessage = function(event) {
+    const data = JSON.parse(event.data);
+    output.textContent += `Asset: ${data.asset}, Price: ${data.price}, Timestamp: ${data.timestamp}\n`;
+};
+</script>
+</body>
+</html>
