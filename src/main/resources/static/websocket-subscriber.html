@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Subscriber</title>
+</head>
+<body>
+    <h1>WebSocket Subscriber</h1>
+    <pre id="output"></pre>
+
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.2/dist/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+    <script>
+    const socket = new SockJS('http://localhost:8080/ws');  // URL correta do WebSocket
+    const stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function(frame) {
+        console.log('Conectado: ' + frame);
+        stompClient.send("/app/index", {}, JSON.stringify({'message': 'oi'}));
+        
+        stompClient.subscribe("/topic/greetings", function(messageOutput) {
+            console.log(messageOutput.body);
+            document.getElementById("output").textContent = messageOutput.body;
+        });
+    });
+
+    </script>
+</body>
+</html>
